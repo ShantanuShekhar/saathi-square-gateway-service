@@ -19,6 +19,12 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 	    String path = exchange.getRequest().getURI().getPath();
+	    String method = exchange.getRequest().getMethod().name();
+
+	    // Allow OPTIONS requests (CORS preflight) to pass through
+	    if ("OPTIONS".equals(method)) {
+	        return chain.filter(exchange);
+	    }
 
 	    // Allow public endpoints
 	    // Allow all public endpoints under /auth and /society
@@ -49,8 +55,9 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
 
 	@Override
 	public int getOrder() {
-		// TODO Auto-generated method stub
-		return -1;
+		// Set order to run after CORS filter (higher number = lower priority)
+		// CORS filter typically runs at -100, so we run at 0
+		return 0;
 	}
 
 

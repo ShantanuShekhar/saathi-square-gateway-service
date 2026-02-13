@@ -19,8 +19,40 @@ spring:
           uri: lb://SOCIETY-SERVICE
           predicates:
             - Path=/society/**
+        - id: resident-service
+          uri: lb://RESIDENT-SERVICE
+          predicates:
+            - Path=/resident/**
+        - id: complaint-service
+          uri: lb://COMPLAINT-SERVICE
+          predicates:
+            - Path=/complaint/**
+        - id: visitor-service
+          uri: lb://VISITOR-SERVICE
+          predicates:
+            - Path=/visitor/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4000"
+              - "http://localhost:4200"
+              - "http://127.0.0.1:4000"
+              - "http://127.0.0.1:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+              - PATCH
+              - HEAD
+            allowedHeaders: "*"
+            exposedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
       default-filters:
-        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin RETAIN_FIRST
 
 eureka:
   client:
